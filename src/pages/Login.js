@@ -5,11 +5,14 @@ import { useNavigate } from "react-router-dom";
 import loginImage from "../assets/login.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { googleLogin, loginUser } from "../features/auth/authSlice";
+import { toast } from "react-hot-toast";
 const Login = () => {
   const { register, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isLoading, email } = useSelector((state) => state.auth);
+  const { isLoading, email, isError, error } = useSelector(
+    (state) => state.auth
+  );
   const onSubmit = ({ email, password }) => {
     dispatch(loginUser({ email, password }));
     // console.log(data);
@@ -22,6 +25,11 @@ const Login = () => {
   const handleGoogleLogin = () => {
     dispatch(googleLogin());
   };
+  useEffect(() => {
+    if (isError) {
+      toast.error(error);
+    }
+  }, [isError, error]);
   return (
     <div className="flex h-screen items-center">
       <div className="w-1/2">
@@ -36,13 +44,19 @@ const Login = () => {
                 <label htmlFor="email" className="ml-5">
                   Email
                 </label>
-                <input type="email" {...register("email")} id="email" />
+                <input
+                  className="w-full"
+                  type="email"
+                  {...register("email")}
+                  id="email"
+                />
               </div>
               <div className="flex flex-col items-start">
                 <label htmlFor="password" className="ml-5">
                   Password
                 </label>
                 <input
+                  className="w-full"
                   type="password"
                   id="password"
                   {...register("password")}

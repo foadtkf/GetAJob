@@ -5,6 +5,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import auth from "./firebase/firebase.config";
 import { setuser } from "./features/auth/authSlice";
 import { useDispatch } from "react-redux";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const dispatch = useDispatch();
@@ -18,6 +19,7 @@ function App() {
   }, []);
   return (
     <>
+      <Toaster />
       <RouterProvider router={routes} />
     </>
   );
