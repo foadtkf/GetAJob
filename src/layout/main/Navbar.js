@@ -1,11 +1,20 @@
 import { signOut } from "firebase/auth";
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Link, useLocation } from "react-router-dom";
+import { logout } from "../../features/auth/authSlice";
+import auth from "../../firebase/firebase.config";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
+  const handleSignout = () => {
+    signOut(auth).then(() => {
+      dispatch(logout());
+    });
+  };
   const { pathname } = useLocation();
-
+  const { email } = useSelector((state) => state.auth);
   return (
     <nav
       className={`h-14 fixed w-full z-[999] ${
@@ -23,14 +32,23 @@ const Navbar = () => {
           </Link>
         </li>
 
-        <li>
-          <Link
+        {email ? (
+          <button
             className="border border-black px-2 py-1 rounded-full hover:border-primary hover:text-white hover:bg-primary hover:px-4 transition-all "
-            to="/login"
+            onClick={handleSignout}
           >
-            Login
-          </Link>
-        </li>
+            Logout
+          </button>
+        ) : (
+          <li>
+            <Link
+              className="border border-black px-2 py-1 rounded-full hover:border-primary hover:text-white hover:bg-primary hover:px-4 transition-all "
+              to="/login"
+            >
+              Login
+            </Link>
+          </li>
+        )}
       </ul>
     </nav>
   );
