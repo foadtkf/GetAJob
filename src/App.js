@@ -19,6 +19,7 @@ function App() {
       }
     });
   }, []);
+  console.log(process.env.DEPLOYED_URL);
   return (
     <>
       <Toaster />
