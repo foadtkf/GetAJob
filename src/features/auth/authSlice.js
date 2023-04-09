@@ -43,6 +43,9 @@ const authSlice = createSlice({
       state.email = payload;
       state.isLoading = false;
     },
+    toggleLoading: (state, payload) => {
+      state.isLoading = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -96,5 +99,5 @@ const authSlice = createSlice({
       });
   },
 });
-export const { logout, setuser } = authSlice.actions;
+export const { logout, setuser, toggleLoading } = authSlice.actions;
 export default authSlice.reducer;
