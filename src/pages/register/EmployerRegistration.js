@@ -7,8 +7,13 @@ import { useSelector } from "react-redux";
 
 const EmployerRegistration = () => {
   const [countries, setCountries] = useState([]);
+  const { email } = useSelector((state) => state.auth.user);
 
-  const { handleSubmit, register, control } = useForm();
+  const { handleSubmit, register, control } = useForm({
+    defaultValues: {
+      email,
+    },
+  });
   const term = useWatch({ control, name: "term" });
   const navigate = useNavigate();
   const [postUser, { isLoading, isError }] = useRegisterMutation();
@@ -34,7 +39,6 @@ const EmployerRegistration = () => {
   ];
 
   const employeeRange = ["1 - 10", "11 - 50", "51 - 100", "Above 100"];
-  const { email } = useSelector((state) => state.auth.user);
   useEffect(() => {
     fetch("https://restcountries.com/v3.1/all")
       .then((res) => res.json())
@@ -43,7 +47,7 @@ const EmployerRegistration = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    postUser({ ...data, role: "employer", email: email });
+    postUser({ ...data, role: "employer" });
   };
 
   return (
@@ -79,9 +83,9 @@ const EmployerRegistration = () => {
             </label>
             <input
               type="email"
+              className="cursor-not-allowed"
               id="email"
               disabled
-              defaultValue={email}
               {...register("email")}
             />
           </div>
