@@ -7,8 +7,10 @@ import {
 } from "firebase/auth";
 import auth from "../../firebase/firebase.config";
 const initialState = {
-  email: "",
-  role: "",
+  user: {
+    email: "",
+    role: "",
+  },
   isLoading: true,
   isError: false,
   error: "",
@@ -20,6 +22,12 @@ export const createUser = createAsyncThunk(
     return data.user.email;
   }
 );
+export const getUser = createAsyncThunk("auth/getUser", async (email) => {
+  // console.log(email);
+  const res = await fetch(`${process.env.REACT_APP_DEV_URL}/user/${email}`);
+  const data = await res.json();
+  return data.data;
+});
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ email, password }, thunkApi) => {
@@ -37,10 +45,10 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      state.email = "";
+      state.user.email = "";
     },
     setuser: (state, { payload }) => {
-      state.email = payload;
+      state.user.email = payload;
       state.isLoading = false;
     },
     toggleLoading: (state, payload) => {
@@ -57,7 +65,7 @@ const authSlice = createSlice({
       .addCase(createUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isError = false;
-        state.email = action.payload;
+        state.user.email = action.payload;
         state.error = "";
       })
       .addCase(createUser.rejected, (state, action) => {
@@ -73,7 +81,7 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isError = false;
-        state.email = action.payload;
+        state.user.email = action.payload;
         state.error = "";
       })
       .addCase(loginUser.rejected, (state, action) => {
@@ -89,10 +97,26 @@ const authSlice = createSlice({
       .addCase(googleLogin.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isError = false;
-        state.email = action.payload;
+        state.user.email = action.payload;
         state.error = "";
       })
       .addCase(googleLogin.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(getUser.pending, (state, payload) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.error = "";
+      })
+      .addCase(getUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.user = action.payload;
+        state.error = "";
+      })
+      .addCase(getUser.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.error = action.error.message;

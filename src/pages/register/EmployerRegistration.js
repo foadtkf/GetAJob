@@ -34,7 +34,7 @@ const EmployerRegistration = () => {
   ];
 
   const employeeRange = ["1 - 10", "11 - 50", "51 - 100", "Above 100"];
-  const { email } = useSelector((state) => state.auth);
+  const { email } = useSelector((state) => state.auth.user);
   useEffect(() => {
     fetch("https://restcountries.com/v3.1/all")
       .then((res) => res.json())
@@ -43,7 +43,7 @@ const EmployerRegistration = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    postUser({ ...data, role: "employer" });
+    postUser({ ...data, role: "employer", email: email });
   };
 
   return (

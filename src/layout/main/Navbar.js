@@ -14,7 +14,7 @@ const Navbar = () => {
     });
   };
   const { pathname } = useLocation();
-  const { email, role } = useSelector((state) => state.auth);
+  const { email, role } = useSelector((state) => state.auth.user);
   return (
     <nav
       className={`h-14 fixed w-full z-[999] ${
