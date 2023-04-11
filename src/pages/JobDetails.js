@@ -16,7 +16,9 @@ const JobDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
-  const { data, isLoading, isError } = useGetJobByIdQuery(id);
+  const { data, isLoading, isError } = useGetJobByIdQuery(id, {
+    pollingInterval: 1000,
+  });
   const [applyToJob] = useApplyJobMutation();
   const { register, handleSubmit, reset } = useForm();
   const [postQuestion] = useAskQuestionMutation();
