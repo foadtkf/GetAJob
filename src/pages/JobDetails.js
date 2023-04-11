@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 
 import meeting from "../assets/meeting.jpg";
 import { BsArrowRightShort, BsArrowReturnRight } from "react-icons/bs";
 import {
+  useAnsQuestionMutation,
   useApplyJobMutation,
   useAskQuestionMutation,
   useGetJobByIdQuery,
@@ -19,6 +20,7 @@ const JobDetails = () => {
   const [applyToJob] = useApplyJobMutation();
   const { register, handleSubmit, reset } = useForm();
   const [postQuestion] = useAskQuestionMutation();
+  const [ansQuestion] = useAnsQuestionMutation();
   const handleQuestionsubmit = (data) => {
     const qData = {
       ...data,
@@ -29,6 +31,7 @@ const JobDetails = () => {
     postQuestion(qData);
     reset();
   };
+  const [reply, setReply] = useState("");
   const {
     companyName,
     position,
@@ -59,6 +62,9 @@ const JobDetails = () => {
       jobId: _id,
     };
     applyToJob(data);
+  };
+  const handleReply = (id) => {
+    ansQuestion({ reply, userId: id });
   };
   return (
     <div className="pt-14 grid grid-cols-12 gap-5">
@@ -129,35 +135,45 @@ const JobDetails = () => {
                     </p>
                   ))}
 
-                  <div className="flex gap-3 my-5">
-                    <input placeholder="Reply" type="text" className="w-full" />
-                    <button
-                      className="shrink-0 h-14 w-14 bg-primary/10 border border-primary hover:bg-primary rounded-full transition-all  grid place-items-center text-primary hover:text-white"
-                      type="button"
-                    >
-                      <BsArrowRightShort size={30} />
-                    </button>
-                  </div>
+                  {user.role === "employer" && (
+                    <div className="flex gap-3 my-5">
+                      <input
+                        placeholder="Reply"
+                        type="text"
+                        className="w-full"
+                        onBlur={(e) => setReply(e.target.value)}
+                      />
+                      <button
+                        onClick={() => handleReply(id)}
+                        className="shrink-0 h-14 w-14 bg-primary/10 border border-primary hover:bg-primary rounded-full transition-all  grid place-items-center text-primary hover:text-white"
+                        type="button"
+                      >
+                        <BsArrowRightShort size={30} />
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
 
-            <form onSubmit={handleSubmit(handleQuestionsubmit)}>
-              <div className="flex gap-3 my-5">
-                <input
-                  placeholder="Ask a question..."
-                  type="text"
-                  className="w-full"
-                  {...register("question")}
-                />
-                <button
-                  className="shrink-0 h-14 w-14 bg-primary/10 border border-primary hover:bg-primary rounded-full transition-all  grid place-items-center text-primary hover:text-white"
-                  type="submit"
-                >
-                  <BsArrowRightShort size={30} />
-                </button>
-              </div>
-            </form>
+            {user.role === "candidate" && (
+              <form onSubmit={handleSubmit(handleQuestionsubmit)}>
+                <div className="flex gap-3 my-5">
+                  <input
+                    placeholder="Ask a question..."
+                    type="text"
+                    className="w-full"
+                    {...register("question")}
+                  />
+                  <button
+                    className="shrink-0 h-14 w-14 bg-primary/10 border border-primary hover:bg-primary rounded-full transition-all  grid place-items-center text-primary hover:text-white"
+                    type="submit"
+                  >
+                    <BsArrowRightShort size={30} />
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       </div>
