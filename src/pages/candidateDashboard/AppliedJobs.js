@@ -15,9 +15,9 @@ const AppliedJobs = () => {
   }
   // console.log(data);
   return (
-    <div className="  md:px-[10%]">
+    <div className="md:px-[5%]">
       <h1 className="text-xl py-5">Applied jobs</h1>
-      <div className="gap-5 pb-5">
+      <div className="grid grid-cols-2 gap-5 pb-5">
         {data?.data?.map((job, index) => (
           <JobCard job={job} key={index} />
         ))}
