@@ -46,7 +46,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      state.user.email = "";
+      state.user = {};
     },
     setuser: (state, { payload }) => {
       state.user.email = payload;
